@@ -28,6 +28,11 @@ public class JwtFilter extends OncePerRequestFilter {
         String requestTokenHeader = request.getHeader("Authorization");
         String username = null;
         String jwtToken = null;
+        if (request.getServletPath().startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")
                 && !requestTokenHeader.trim().equals("Bearer null")) {
             jwtToken = requestTokenHeader.substring(7);
