@@ -12,10 +12,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Permanent extends Enseignant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String specialite;
-    private boolean active;
-    private boolean archive;
 }

@@ -4,6 +4,7 @@ import com.coursuasz.l32i.daos.microserviceutilisateur.dto.LoginDTO;
 import com.coursuasz.l32i.daos.microserviceutilisateur.dto.UtilisateurDTO;
 import com.coursuasz.l32i.daos.microserviceutilisateur.jwt.JwtUtils;
 import com.coursuasz.l32i.daos.microserviceutilisateur.mapper.UtilisateurMapper;
+import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Enseignant;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Utilisateur;
 import com.coursuasz.l32i.daos.microserviceutilisateur.service.UtilisateurService;
 import lombok.Data;
@@ -19,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -60,5 +62,11 @@ public class UtilisateurController {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
         }
+    }
+
+    //liste
+    @GetMapping("/liste")
+    public ResponseEntity<List<Utilisateur>> lister() {
+        return ResponseEntity.ok(utilisateurService.lister());
     }
 }

@@ -19,8 +19,8 @@ public class Utilisateur {
     private String prenom;
     private String password;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dateCreation;
-    private boolean active;
+    private Date dateCreation = new Date();
+    private boolean active = true;
     private String role;
 
 }

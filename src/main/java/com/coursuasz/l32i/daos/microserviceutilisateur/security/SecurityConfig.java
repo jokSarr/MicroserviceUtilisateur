@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/permanents/**").permitAll()
+                                .requestMatchers("/enseignants/**").permitAll()
                                 .requestMatchers("/h2/**").permitAll()
                                 .anyRequest().authenticated()
                 )

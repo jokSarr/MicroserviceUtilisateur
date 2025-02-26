@@ -2,6 +2,7 @@ package com.coursuasz.l32i.daos.microserviceutilisateur.service;
 
 import com.coursuasz.l32i.daos.microserviceutilisateur.exception.ResourceAlreadyExistException;
 import com.coursuasz.l32i.daos.microserviceutilisateur.exception.ResourceNotFoundException;
+import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Enseignant;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Utilisateur;
 import com.coursuasz.l32i.daos.microserviceutilisateur.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -37,5 +40,9 @@ public class UtilisateurService {
         }catch(Exception exception){
             throw new ResourceNotFoundException("Utilisateur "+username+" n'existe pas");
         }
+    }
+
+    public List<Utilisateur> lister() {
+        return utilisateurRepository.findAll();
     }
 }
