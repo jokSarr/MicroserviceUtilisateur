@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Etudiant {
+public class Etudiant extends Utilisateur{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nom;
-    private String prenom;
     private String matricule;
 }

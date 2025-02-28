@@ -44,7 +44,9 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/permanents/**").permitAll()
+                                .requestMatchers("/vacataires/**").permitAll()
                                 .requestMatchers("/enseignants/**").permitAll()
+                                .requestMatchers("/etudiants/**").permitAll()
                                 .requestMatchers("/h2/**").permitAll()
                                 .anyRequest().authenticated()
                 )

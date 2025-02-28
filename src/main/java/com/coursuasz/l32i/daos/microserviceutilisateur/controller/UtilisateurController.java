@@ -39,7 +39,7 @@ public class UtilisateurController {
     @PostMapping(path = "/inscrire")
     public ResponseEntity<?> ajouter (@RequestBody UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = utilisateurMapper.dTOToUtilisateur(utilisateurDTO);
-        String password = passwordEncoder.encode("Passer123");
+        String password = passwordEncoder.encode("w");
         utilisateur.setPassword(password);
         utilisateurService.ajouter(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateurDTO);

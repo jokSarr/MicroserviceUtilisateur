@@ -15,6 +15,4 @@ public class Vacataire extends Enseignant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String niveau;
-    private boolean active;
-    private boolean archive;
 }
