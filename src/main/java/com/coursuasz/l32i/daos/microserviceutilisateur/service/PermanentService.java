@@ -43,17 +43,29 @@ public class PermanentService {
     }
 
 
-    public void modifier(Long id, Permanent updatedPermanent) {
-        Permanent permanent = rechercher(id);
+    public Permanent modifier(Long id, Permanent updatedPermanent) {
+        // Vérifier si le Permanent existe
+        Permanent existingPermanent = permanentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Permanent avec ID " + id + " non trouvé"));
 
-        permanent.setNom(updatedPermanent.getNom());
-        permanent.setPrenom(updatedPermanent.getPrenom());
-        permanent.setUsername(updatedPermanent.getUsername());
-        permanent.setGrade(updatedPermanent.getGrade());
-        permanent.setMatricule(updatedPermanent.getMatricule());
-        permanent.setSpecialite(updatedPermanent.getSpecialite());
-        permanent.setArchive(updatedPermanent.isArchive());
-        permanentRepository.save(permanent);
+        // Mise à jour des champs hérités de Utilisateur
+        existingPermanent.setUsername(updatedPermanent.getUsername());
+        existingPermanent.setNom(updatedPermanent.getNom());
+        existingPermanent.setPrenom(updatedPermanent.getPrenom());
+        existingPermanent.setPassword(updatedPermanent.getPassword());
+        existingPermanent.setActive(updatedPermanent.isActive());
+        existingPermanent.setRole(updatedPermanent.getRole());
+
+        // Mise à jour des champs hérités de Enseignant
+        existingPermanent.setGrade(updatedPermanent.getGrade());
+        existingPermanent.setMatricule(updatedPermanent.getMatricule());
+        existingPermanent.setArchive(updatedPermanent.isArchive());
+
+        // Mise à jour du champ spécifique à Permanent
+        existingPermanent.setSpecialite(updatedPermanent.getSpecialite());
+
+        // Sauvegarde des modifications
+        return permanentRepository.save(existingPermanent);
     }
 
     public void supprimer(Long id) {

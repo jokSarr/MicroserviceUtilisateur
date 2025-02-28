@@ -43,14 +43,29 @@ public class VacataireService {
     }
 
 
-    public void modifier(Long id, Vacataire updatedVacataire) {
-        Vacataire vacataire = vacataireRepository.findById(id).get();
+    public Vacataire modifier(Long id, Vacataire updatedVacataire) {
+        // Vérifier si le Vacataire existe
+        Vacataire existingVacataire = vacataireRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vacataire avec ID " + id + " non trouvé"));
 
-        vacataire.setNom(updatedVacataire.getNom());
-        vacataire.setPrenom(updatedVacataire.getPrenom());
-        vacataire.setActive(updatedVacataire.isActive());
-        vacataire.setArchive(updatedVacataire.isArchive());
-        vacataireRepository.save(vacataire);
+        // Mise à jour des champs hérités de Utilisateur
+        existingVacataire.setUsername(updatedVacataire.getUsername());
+        existingVacataire.setNom(updatedVacataire.getNom());
+        existingVacataire.setPrenom(updatedVacataire.getPrenom());
+        existingVacataire.setPassword(updatedVacataire.getPassword());
+        existingVacataire.setActive(updatedVacataire.isActive());
+        existingVacataire.setRole(updatedVacataire.getRole());
+
+        // Mise à jour des champs hérités de Enseignant
+        existingVacataire.setGrade(updatedVacataire.getGrade());
+        existingVacataire.setMatricule(updatedVacataire.getMatricule());
+        existingVacataire.setArchive(updatedVacataire.isArchive());
+
+        // Mise à jour du champ spécifique à Vacataire
+        existingVacataire.setNiveau(updatedVacataire.getNiveau());
+
+        // Sauvegarde des modifications
+        return vacataireRepository.save(existingVacataire);
     }
 
     public void supprimer(Long id) {

@@ -39,10 +39,24 @@ public class EtudiantService {
         return etudiantRepository.findAll();
     }
 
-    public void modifier(Long id, Etudiant updatedEtudiant) {
-        Etudiant etudiant = rechercher(id);
-        etudiant.setMatricule(updatedEtudiant.getMatricule());
-        etudiantRepository.save(etudiant);
+    public Etudiant modifier(Long id, Etudiant updatedEtudiant) {
+        // Vérifier si l'étudiant existe
+        Etudiant existingEtudiant = etudiantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Étudiant avec ID " + id + " non trouvé"));
+
+        // Mise à jour des champs hérités de Utilisateur
+        existingEtudiant.setUsername(updatedEtudiant.getUsername());
+        existingEtudiant.setNom(updatedEtudiant.getNom());
+        existingEtudiant.setPrenom(updatedEtudiant.getPrenom());
+        existingEtudiant.setPassword(updatedEtudiant.getPassword());
+        existingEtudiant.setActive(updatedEtudiant.isActive());
+        existingEtudiant.setRole(updatedEtudiant.getRole());
+
+        // Mise à jour du champ spécifique à Etudiant
+        existingEtudiant.setMatricule(updatedEtudiant.getMatricule());
+
+        // Sauvegarde des modifications
+        return etudiantRepository.save(existingEtudiant);
     }
 
     public void supprimer(Long id) {

@@ -3,6 +3,7 @@ package com.coursuasz.l32i.daos.microserviceutilisateur.controller;
 import com.coursuasz.l32i.daos.microserviceutilisateur.exception.ResourceAlreadyExistException;
 import com.coursuasz.l32i.daos.microserviceutilisateur.exception.ResourceNotFoundException;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Enseignant;
+import com.coursuasz.l32i.daos.microserviceutilisateur.repository.EnseignantRepository;
 import com.coursuasz.l32i.daos.microserviceutilisateur.service.EnseignantService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,8 @@ public class EnseignantController {
 
     private final EnseignantService enseignantService;
 
+    private final EnseignantRepository enseignantRepository;
+
     //ajout enseignant
     @PostMapping("/ajouter")
     public ResponseEntity<?> ajouter(@RequestBody Enseignant enseignant) {
@@ -38,7 +41,7 @@ public class EnseignantController {
     @GetMapping("/{id}")
     public ResponseEntity<?> rechercher(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(enseignantService.rechercher(id));
+            return ResponseEntity.ok(enseignantService.rechercherParId(id));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -54,10 +57,12 @@ public class EnseignantController {
     @PutMapping("/modifier/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Enseignant updatedEnseignant) {
         try {
-            enseignantService.modifier(id, updatedEnseignant);
-            return ResponseEntity.ok("Enseignant mis à jour !");
+            Enseignant enseignantModifie = enseignantService.modifier(id, updatedEnseignant);
+            return ResponseEntity.ok(enseignantModifie); // Retourne l'objet mis à jour
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la modification");
         }
     }
 

@@ -11,8 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Etudiant extends Utilisateur{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String matricule;
 }

@@ -47,13 +47,15 @@ public class VacataireController {
         return ResponseEntity.ok(vacataireService.Liste());
     }
 
-    @PutMapping("/vacataire/{id}")
+    @PutMapping("/modifier/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Vacataire updatedVacataire) {
         try {
-            vacataireService.modifier(id, updatedVacataire);
-            return ResponseEntity.ok("Permanent mis à jour !");
+            Vacataire vacataireModifie = vacataireService.modifier(id, updatedVacataire);
+            return ResponseEntity.ok(vacataireModifie); // Retourne l'objet mis à jour
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la modification");
         }
     }
 

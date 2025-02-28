@@ -29,26 +29,42 @@ public class EnseignantService {
         }
     }
 
-    public Enseignant rechercher(Long id) {
-        return enseignantRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enseignant avec ID " + id + " introuvable"));
+    public Enseignant rechercherParId(Long id) {
+        System.out.println("Recherche de l'enseignant avec ID : " + id);
+        Enseignant enseignant = enseignantRepository.findById(id).orElse(null);
+        System.out.println("Résultat de la recherche : " + (enseignant != null ? enseignant.toString() : "Aucun enseignant trouvé"));
+        return enseignant;
+    }
+
+    public Enseignant modifier(Long id, Enseignant updatedEnseignant) {
+        // Vérifier si l'enseignant existe
+        Enseignant existingEnseignant = enseignantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Enseignant avec ID " + id + " non trouvé"));
+
+        // Mise à jour des champs hérités de Utilisateur
+        existingEnseignant.setUsername(updatedEnseignant.getUsername());
+        existingEnseignant.setNom(updatedEnseignant.getNom());
+        existingEnseignant.setPrenom(updatedEnseignant.getPrenom());
+        existingEnseignant.setPassword(updatedEnseignant.getPassword());
+        existingEnseignant.setActive(updatedEnseignant.isActive());
+        existingEnseignant.setRole(updatedEnseignant.getRole());
+
+        // Mise à jour des champs spécifiques à Enseignant
+        existingEnseignant.setGrade(updatedEnseignant.getGrade());
+        existingEnseignant.setMatricule(updatedEnseignant.getMatricule());
+        existingEnseignant.setArchive(updatedEnseignant.isArchive());
+
+        // Sauvegarde des modifications
+        return enseignantRepository.save(existingEnseignant);
     }
 
     public List<Enseignant> lister() {
         return enseignantRepository.findAll();
     }
 
-    public void modifier(Long id, Enseignant updatedEnseignant) {
-        Enseignant enseignant = rechercher(id);
-        enseignant.setNom(updatedEnseignant.getNom());
-        enseignant.setPrenom(updatedEnseignant.getPrenom());
-        enseignant.setUsername(updatedEnseignant.getUsername());
-        enseignant.setGrade(updatedEnseignant.getGrade());
-        enseignantRepository.save(enseignant);
-    }
 
     public void supprimer(Long id) {
-        Enseignant enseignant = rechercher(id);
+        Enseignant enseignant = rechercherParId(id);
         enseignantRepository.delete(enseignant);
     }
 

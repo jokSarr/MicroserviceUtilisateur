@@ -11,8 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Vacataire extends Enseignant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String niveau;
 }

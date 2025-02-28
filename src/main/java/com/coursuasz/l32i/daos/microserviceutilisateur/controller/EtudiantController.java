@@ -54,10 +54,12 @@ public class EtudiantController {
     @PutMapping("/modifier/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Etudiant updatedEtudiant) {
         try {
-            etudiantService.modifier(id, updatedEtudiant);
-            return ResponseEntity.ok("Enseignant mis à jour !");
+            Etudiant etudiantModifie = etudiantService.modifier(id, updatedEtudiant);
+            return ResponseEntity.ok(etudiantModifie); // Retourne l'objet mis à jour
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la modification");
         }
     }
 
