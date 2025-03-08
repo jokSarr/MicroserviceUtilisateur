@@ -3,6 +3,7 @@ package com.coursuasz.l32i.daos.microserviceutilisateur.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,19 +21,21 @@ public class JwtUtils {
     @Value("${app.expiration-time}")
     private Long expirationTime;
 
-    public String createToken(Map<String, Object> claims, String subject) {
+    public String createToken(Map<String, Object> claims, String subject, String role, Long id) {
         Date expiryDate = Date.from(Instant.ofEpochMilli(System.currentTimeMillis() + expirationTime));
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
+                .claim("role", role)
+                .claim("id", id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expiryDate)
                 .compact();
     }
 
-    public String generateToken(String username){
+    public String generateToken(String username, String role, Long id){
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        return createToken(claims, username, role, id);
     }
 
     public String extractUsername(String bearerToken){

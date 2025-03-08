@@ -43,11 +43,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/permanents/**").permitAll()
-                                .requestMatchers("/vacataires/**").permitAll()
-                                .requestMatchers("/enseignants/**").permitAll()
-                                .requestMatchers("/etudiants/**").permitAll()
-                                .requestMatchers("/h2/**").permitAll()
+                                .requestMatchers("/vacataires/**").hasRole("VACATAIRE")
+                                .requestMatchers("/permanents/**").hasRole("PERMANENT")
+                                .requestMatchers("/chef-departement/**").hasRole("CHEF-DEPARTEMENT")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtFilter(utilisateurDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
