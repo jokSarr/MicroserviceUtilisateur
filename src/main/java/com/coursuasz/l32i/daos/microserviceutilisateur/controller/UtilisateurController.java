@@ -6,6 +6,7 @@ import com.coursuasz.l32i.daos.microserviceutilisateur.jwt.JwtUtils;
 import com.coursuasz.l32i.daos.microserviceutilisateur.mapper.UtilisateurMapper;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Enseignant;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Utilisateur;
+import com.coursuasz.l32i.daos.microserviceutilisateur.service.UtilisateurDetailsService;
 import com.coursuasz.l32i.daos.microserviceutilisateur.service.UtilisateurService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -35,11 +37,12 @@ public class UtilisateurController {
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private UtilisateurMapper utilisateurMapper = Mappers.getMapper(UtilisateurMapper.class);
+    private final UtilisateurDetailsService userDetails;
 
     @PostMapping(path = "/inscrire")
     public ResponseEntity<?> ajouter (@RequestBody UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = utilisateurMapper.dTOToUtilisateur(utilisateurDTO);
-        String password = passwordEncoder.encode("w");
+        String password = passwordEncoder.encode("Passer123");
         utilisateur.setPassword(password);
         utilisateurService.ajouter(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateurDTO);
@@ -48,13 +51,21 @@ public class UtilisateurController {
     @PostMapping(path = "/connecter")
     public ResponseEntity<?> authentifier(@RequestBody LoginDTO loginDTO) {
         Utilisateur utilisateur = utilisateurMapper.loginToUtilisateur(loginDTO);
+        System.out.println("L'utilisateur mappe est: " + utilisateur.getUsername() + " " + utilisateur.getRole());
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(utilisateur.getUsername(), utilisateur.getPassword()));
             if (authentication.isAuthenticated()) {
-                System.out.println(authentication);
+                String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+                System.out.println("username " + username);
+                Utilisateur user = userDetails.getUtilisateurByUsername(username);
                 Map<String, Object> authData = new HashMap<>();
-                authData.put("token",jwtUtils.generateToken(utilisateur.getUsername()));
+                String role = user.getRole();
+                Long id = user.getId();
+
+                System.out.println(role);
+                authData.put("token",jwtUtils.generateToken(username, role,id));
                 authData.put("type", "Bearer");
+                authData.put("role", role);
                 return ResponseEntity.ok(authData);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");

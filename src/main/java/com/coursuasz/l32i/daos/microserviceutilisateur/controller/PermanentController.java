@@ -34,7 +34,7 @@ public class PermanentController {
         }
     }
 
-    @GetMapping("/permanent/{id}")  // ✅ Correction ici
+    @GetMapping("/permanent/{id}")
     public ResponseEntity<?> rechercher(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(permanentService.rechercher(id));
@@ -52,7 +52,7 @@ public class PermanentController {
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Permanent updatedPermanent) {
         try {
             Permanent permanentModifie = permanentService.modifier(id, updatedPermanent);
-            return ResponseEntity.ok(permanentModifie); // Retourne l'objet mis à jour
+            return ResponseEntity.ok(permanentModifie);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
