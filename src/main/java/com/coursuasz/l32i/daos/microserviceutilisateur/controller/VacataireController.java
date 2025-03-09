@@ -8,20 +8,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin(origins = "", allowedHeaders = "")
 @RestController
-@RequestMapping("/vacataires")
+@RequestMapping("/chef-departement")
 @RequiredArgsConstructor
 @Slf4j
 public class VacataireController {
 
     private final VacataireService vacataireService;
 
-    @PostMapping("/vacataire")
+    @PostMapping("/ajoutvacataire")
     public ResponseEntity<?> ajouter(@RequestBody Vacataire vacataire) {
         try {
             vacataireService.ajouter(vacataire);
@@ -33,7 +34,7 @@ public class VacataireController {
         }
     }
 
-    @GetMapping("/vacataire/{id}")  //  Correction ici
+    @GetMapping("/recherchevacataire/{id}")  //  Correction ici
     public ResponseEntity<?> rechercher(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(vacataireService.rechercher(id));
@@ -42,12 +43,14 @@ public class VacataireController {
         }
     }
 
-    @GetMapping("/liste")
+    @GetMapping("/listevacataire")
+    @PreAuthorize("hasAuthority('CHEF-DEPARTEMENT')")
+
     public ResponseEntity<List<Vacataire>> lister() {
         return ResponseEntity.ok(vacataireService.Liste());
     }
 
-    @PutMapping("/modifier/{id}")
+    @PutMapping("/modifiervacataire/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Vacataire updatedVacataire) {
         try {
             Vacataire vacataireModifie = vacataireService.modifier(id, updatedVacataire);
@@ -59,7 +62,7 @@ public class VacataireController {
         }
     }
 
-    @DeleteMapping("/vacataire/{id}")
+    @DeleteMapping("/supprimervacataire/{id}")
     public ResponseEntity<?> supprimer(@PathVariable Long id) {
         try {
             vacataireService.supprimer(id);

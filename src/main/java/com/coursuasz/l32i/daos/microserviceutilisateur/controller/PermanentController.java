@@ -15,14 +15,14 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/permanents")
+@RequestMapping("/chef-departement")
 @RequiredArgsConstructor
 @Slf4j
 public class PermanentController {
 
     private final PermanentService permanentService;
 
-    @PostMapping("/permanent")
+    @PostMapping("/ajoutpermanent")
     public ResponseEntity<?> ajouter(@RequestBody Permanent permanent) {
         try {
             permanentService.ajouter(permanent);
@@ -48,7 +48,7 @@ public class PermanentController {
         return ResponseEntity.ok(permanentService.Liste());
     }
 
-    @PutMapping("/modifier/{id}")
+    @PutMapping("/modifierpermanent/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Permanent updatedPermanent) {
         try {
             Permanent permanentModifie = permanentService.modifier(id, updatedPermanent);
@@ -60,7 +60,7 @@ public class PermanentController {
         }
     }
 
-    @DeleteMapping("/permanent/{id}")
+    @DeleteMapping("/supprimerpermanent/{id}")
     public ResponseEntity<?> supprimer(@PathVariable Long id) {
         try {
             permanentService.supprimer(id);

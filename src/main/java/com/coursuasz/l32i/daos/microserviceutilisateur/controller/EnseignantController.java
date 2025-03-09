@@ -15,17 +15,16 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/enseignants")
+@RequestMapping("/chef-departement")
 @RequiredArgsConstructor
 @Slf4j
 public class EnseignantController {
 
     private final EnseignantService enseignantService;
 
-    private final EnseignantRepository enseignantRepository;
 
     //ajout enseignant
-    @PostMapping("/ajouter")
+    @PostMapping("/ajoutenseignant")
     public ResponseEntity<?> ajouter(@RequestBody Enseignant enseignant) {
         try {
             enseignantService.ajouter(enseignant);
@@ -48,13 +47,13 @@ public class EnseignantController {
     }
 
     //liste
-    @GetMapping("/liste")
+    @GetMapping("/listeenseignant")
     public ResponseEntity<List<Enseignant>> lister() {
         return ResponseEntity.ok(enseignantService.lister());
     }
 
     //modification
-    @PutMapping("/modifier/{id}")
+    @PutMapping("/modifierenseignant/{id}")
     public ResponseEntity<?> modifier(@PathVariable Long id, @RequestBody Enseignant updatedEnseignant) {
         try {
             Enseignant enseignantModifie = enseignantService.modifier(id, updatedEnseignant);
@@ -67,7 +66,7 @@ public class EnseignantController {
     }
 
     //supression
-    @DeleteMapping("/supprimer/{id}")
+    @DeleteMapping("/supprimerenseignant/{id}")
     public ResponseEntity<?> supprimer(@PathVariable Long id) {
         try {
             enseignantService.supprimer(id);
