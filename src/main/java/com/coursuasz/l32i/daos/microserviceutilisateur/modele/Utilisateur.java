@@ -1,14 +1,14 @@
 package com.coursuasz.l32i.daos.microserviceutilisateur.modele;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utilisateur {
     @Id
@@ -21,6 +21,11 @@ public class Utilisateur {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreation = new Date();
     private boolean active = true;
-    private String role;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "utilisateur_roles",
+            joinColumns = @JoinColumn(name = "utilisateur_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 }

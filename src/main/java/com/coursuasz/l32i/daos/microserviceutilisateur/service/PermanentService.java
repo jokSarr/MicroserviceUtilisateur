@@ -54,7 +54,7 @@ public class PermanentService {
         existingPermanent.setPrenom(updatedPermanent.getPrenom());
         existingPermanent.setPassword(updatedPermanent.getPassword());
         existingPermanent.setActive(updatedPermanent.isActive());
-        existingPermanent.setRole(updatedPermanent.getRole());
+        existingPermanent.setRoles(updatedPermanent.getRoles());
 
         // Mise à jour des champs hérités de Enseignant
         existingPermanent.setGrade(updatedPermanent.getGrade());

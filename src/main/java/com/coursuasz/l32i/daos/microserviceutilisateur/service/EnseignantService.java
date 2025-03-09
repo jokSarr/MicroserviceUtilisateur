@@ -47,7 +47,7 @@ public class EnseignantService {
         existingEnseignant.setPrenom(updatedEnseignant.getPrenom());
         existingEnseignant.setPassword(updatedEnseignant.getPassword());
         existingEnseignant.setActive(updatedEnseignant.isActive());
-        existingEnseignant.setRole(updatedEnseignant.getRole());
+        existingEnseignant.setRoles(updatedEnseignant.getRoles());
 
         // Mise à jour des champs spécifiques à Enseignant
         existingEnseignant.setGrade(updatedEnseignant.getGrade());

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 
 @Service
@@ -22,7 +23,11 @@ public class UtilisateurDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Utilisateur inexistant : " + username);
         }
 
-        String role = utilisateur.getRole().startsWith("ROLE_") ? utilisateur.getRole() : "ROLE_" + utilisateur.getRole().toUpperCase();
+        // Récupération du premier rôle et ajout du préfixe "ROLE_" si nécessaire
+        String role = utilisateur.getRoles().stream()
+                .findFirst()
+                .map(r -> r.getRole().startsWith("ROLE_") ? r.getRole() : "ROLE_" + r.getRole().toUpperCase())
+                .orElse("ROLE_USER");
 
         return new org.springframework.security.core.userdetails.User(
                 utilisateur.getUsername(),

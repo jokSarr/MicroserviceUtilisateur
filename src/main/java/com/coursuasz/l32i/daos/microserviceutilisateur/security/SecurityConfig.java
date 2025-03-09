@@ -24,7 +24,7 @@ public class SecurityConfig {
     private final UtilisateurDetailsService utilisateurDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -36,7 +36,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UtilisateurDetailsService utilisateurDetailsService, JwtUtils jwtUtils)  throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, UtilisateurDetailsService utilisateurDetailsService, JwtUtils jwtUtils) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)

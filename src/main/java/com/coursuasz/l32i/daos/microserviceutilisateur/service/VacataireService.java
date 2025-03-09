@@ -54,7 +54,7 @@ public class VacataireService {
         existingVacataire.setPrenom(updatedVacataire.getPrenom());
         existingVacataire.setPassword(updatedVacataire.getPassword());
         existingVacataire.setActive(updatedVacataire.isActive());
-        existingVacataire.setRole(updatedVacataire.getRole());
+        existingVacataire.setRoles(updatedVacataire.getRoles());
 
         // Mise à jour des champs hérités de Enseignant
         existingVacataire.setGrade(updatedVacataire.getGrade());

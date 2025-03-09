@@ -4,7 +4,7 @@ import com.coursuasz.l32i.daos.microserviceutilisateur.dto.LoginDTO;
 import com.coursuasz.l32i.daos.microserviceutilisateur.dto.UtilisateurDTO;
 import com.coursuasz.l32i.daos.microserviceutilisateur.jwt.JwtUtils;
 import com.coursuasz.l32i.daos.microserviceutilisateur.mapper.UtilisateurMapper;
-import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Enseignant;
+import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Role;
 import com.coursuasz.l32i.daos.microserviceutilisateur.modele.Utilisateur;
 import com.coursuasz.l32i.daos.microserviceutilisateur.service.UtilisateurDetailsService;
 import com.coursuasz.l32i.daos.microserviceutilisateur.service.UtilisateurService;
@@ -21,6 +21,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +41,16 @@ public class UtilisateurController {
     private final UtilisateurDetailsService userDetails;
 
     @PostMapping(path = "/inscrire")
-    public ResponseEntity<?> ajouter (@RequestBody UtilisateurDTO utilisateurDTO) {
+    public ResponseEntity<?> ajouter(@RequestBody UtilisateurDTO utilisateurDTO) {
         Utilisateur utilisateur = utilisateurMapper.dTOToUtilisateur(utilisateurDTO);
         String password = passwordEncoder.encode("Passer123");
         utilisateur.setPassword(password);
+
+        // Ajouter un rôle par défaut (par exemple, ROLE_USER)
+        Role role = new Role("ROLE_USER");
+        utilisateurService.ajouterRole(role);
+        utilisateur.getRoles().add(role);
+
         utilisateurService.ajouter(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(utilisateurDTO);
     }
@@ -51,7 +58,7 @@ public class UtilisateurController {
     @PostMapping(path = "/connecter")
     public ResponseEntity<?> authentifier(@RequestBody LoginDTO loginDTO) {
         Utilisateur utilisateur = utilisateurMapper.loginToUtilisateur(loginDTO);
-        System.out.println("L'utilisateur mappe est: " + utilisateur.getUsername() + " " + utilisateur.getRole());
+        System.out.println("L'utilisateur mappe est: " + utilisateur.getUsername() + " " + utilisateur.getRoles());
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(utilisateur.getUsername(), utilisateur.getPassword()));
             if (authentication.isAuthenticated()) {
@@ -59,23 +66,23 @@ public class UtilisateurController {
                 System.out.println("username " + username);
                 Utilisateur user = userDetails.getUtilisateurByUsername(username);
                 Map<String, Object> authData = new HashMap<>();
-                String role = user.getRole();
+                String role = user.getRoles().stream().findFirst().map(Role::getRole).orElse("ROLE_USER");
                 Long id = user.getId();
 
                 System.out.println(role);
-                authData.put("token",jwtUtils.generateToken(username, role,id));
+                authData.put("token", jwtUtils.generateToken(username, role, id));
                 authData.put("type", "Bearer");
+                System.out.println("Rôle récupéré pour l'utilisateur : " + role);
                 authData.put("role", role);
                 return ResponseEntity.ok(authData);
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
-        }catch (AuthenticationException e) {
+        } catch (AuthenticationException e) {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("erreur sur username ou password");
         }
     }
 
-    //liste
     @GetMapping("/liste")
     public ResponseEntity<List<Utilisateur>> lister() {
         return ResponseEntity.ok(utilisateurService.lister());

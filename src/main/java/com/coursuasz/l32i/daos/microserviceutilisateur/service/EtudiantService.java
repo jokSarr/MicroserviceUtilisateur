@@ -50,7 +50,7 @@ public class EtudiantService {
         existingEtudiant.setPrenom(updatedEtudiant.getPrenom());
         existingEtudiant.setPassword(updatedEtudiant.getPassword());
         existingEtudiant.setActive(updatedEtudiant.isActive());
-        existingEtudiant.setRole(updatedEtudiant.getRole());
+        existingEtudiant.setRoles(updatedEtudiant.getRoles());
 
         // Mise à jour du champ spécifique à Etudiant
         existingEtudiant.setMatricule(updatedEtudiant.getMatricule());
